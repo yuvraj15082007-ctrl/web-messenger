@@ -1,72 +1,38 @@
 body {
-  font-family: Arial, sans-serif;
-  background: #f2f2f2;
-  margin: 0;
-  padding: 0;
-}
-
-/* LOGIN */
-#loginBox {
-  width: 300px;
-  margin: 100px auto;
-  background: white;
+  font-family: Arial;
   padding: 20px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
-  border-radius: 8px;
 }
 
-#loginBox h2 {
-  text-align: center;
+input, textarea {
+  width: 200px;
+  padding: 5px;
+  margin: 5px 0;
 }
 
-#loginBox input,
-#loginBox button {
-  width: 100%;
+textarea {
+  height: 60px;
+}
+
+#chat {
+  border: 1px solid #ccc;
   margin-top: 10px;
-  padding: 10px;
-}
-
-/* CHAT */
-#chatBox {
-  display: none;
-  max-width: 600px;
-  margin: 20px auto;
-  background: white;
-  padding: 10px;
-  border-radius: 8px;
-}
-
-#messages {
-  list-style: none;
-  padding: 0;
-  height: 350px;
+  padding: 5px;
+  height: 200px;
   overflow-y: auto;
-  border: 1px solid #ddd;
-  margin-bottom: 10px;
 }
 
-#messages li {
-  padding: 8px;
-  margin: 5px;
-  border-radius: 5px;
+.suggestions {
+  border: 1px solid #ccc;
+  width: 200px;
+  background: #fff;
+  position: absolute;
 }
 
-.my-msg {
-  background: #dcf8c6;
-  text-align: right;
+.suggestion-item {
+  padding: 5px;
+  cursor: pointer;
 }
 
-.other-msg {
-  background: #e5e5ea;
-  text-align: left;
-}
-
-#messageInput {
-  width: 80%;
-  padding: 10px;
-}
-
-#sendBtn {
-  width: 18%;
-  padding: 10px;
+.suggestion-item:hover {
+  background: #eee;
 }
