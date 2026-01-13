@@ -1,12 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>Web Messenger</title>
-  <style>
-    body { font-family: Arial; }
-    #chatBox, #inboxBox { display: none; }
-    #inbox { font-size: 22px; cursor: pointer; }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
@@ -15,78 +12,30 @@
 <!-- 🔐 LOGIN -->
 <div id="loginBox">
   <h3>Login</h3>
-  <input id="username" placeholder="Username"><br><br>
-  <input id="password" type="password" placeholder="Password"><br><br>
-  <!-- 🔥 type="button" IMPORTANT -->
-  <button type="button" onclick="login()">Login</button>
+  <input id="username" placeholder="Username" />
+  <input id="password" type="password" placeholder="Password" />
+  <button id="loginBtn" type="button">Login</button>
 </div>
 
 <!-- 📥 INBOX -->
-<div id="inboxBox">
-  <span id="inbox" onclick="openChat()">📥 Inbox</span>
+<div id="inboxBox" style="display:none;">
+  <span id="inbox">📥 Inbox</span>
 </div>
 
 <!-- 💬 CHAT -->
-<div id="chatBox">
+<div id="chatBox" style="display:none;">
   <h3>Chat</h3>
-  <input id="to" placeholder="Send to username"><br><br>
-  <input id="msg" placeholder="Message">
-  <button type="button" onclick="send()">Send</button>
 
-  <ul id="chat"></ul>
+  <input id="to" placeholder="Send to username" autocomplete="off" />
+  <ul id="suggestions"></ul>
+
+  <input id="messageInput" placeholder="Type message..." />
+  <button id="sendBtn" type="button">Send</button>
+
+  <ul id="messages"></ul>
 </div>
 
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-<script>
-  const socket = io();
-  let currentUser = "";
-
-  function login() {
-    console.log("Login clicked");
-
-    const user = document.getElementById("username").value;
-    const pass = document.getElementById("password").value;
-
-    if (!user || !pass) {
-      alert("Username & password required");
-      return;
-    }
-
-    currentUser = user;
-    socket.emit("join", currentUser);
-
-    document.getElementById("loginBox").style.display = "none";
-    document.getElementById("inboxBox").style.display = "block";
-  }
-
-  function openChat() {
-    document.getElementById("chatBox").style.display = "block";
-  }
-
-  function send() {
-    const to = document.getElementById("to").value;
-    const msg = document.getElementById("msg").value;
-
-    if (!to || !msg) {
-      alert("Send to & message required");
-      return;
-    }
-
-    socket.emit("private_message", {
-      from: currentUser,
-      to: to,
-      message: msg
-    });
-
-    document.getElementById("msg").value = "";
-  }
-
-  socket.on("private_message", (data) => {
-    const li = document.createElement("li");
-    li.innerText = `${data.from}: ${data.message}`;
-    document.getElementById("chat").appendChild(li);
-  });
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
