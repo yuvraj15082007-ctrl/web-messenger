@@ -1,29 +1,35 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>Web Messenger</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<h2>Web Messenger</h2>
+  <!-- LOGIN BOX -->
+  <div id="loginBox" class="center">
+    <h2>Login</h2>
+    <input id="username" placeholder="Enter username" />
+    <button id="loginBtn">Login</button>
+  </div>
 
-<div id="loginBox">
-  <input id="username" placeholder="Enter username">
-  <button onclick="login()">Login</button>
-</div>
+  <!-- CHAT BOX -->
+  <div id="chatBox" class="center" style="display:none;">
+    <h2>Web Messenger</h2>
 
-<div id="chatBox" style="display:none;">
-  <input id="toUser" placeholder="Send to username">
-  <div id="suggestions"></div>
+    <input id="toUser" placeholder="Send to username" />
 
-  <textarea id="message" placeholder="Type message"></textarea>
-  <button onclick="sendMessage()">Send</button>
+    <div id="messages" class="chat"></div>
 
-  <div id="chat"></div>
-</div>
+    <div class="sendBox">
+      <input id="message" placeholder="Type message..." />
+      <button id="sendBtn">Send</button>
+    </div>
+  </div>
 
-<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-<script src="script.js"></script>
+  <!-- SOCKET.IO -->
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

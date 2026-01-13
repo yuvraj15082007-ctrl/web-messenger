@@ -36,36 +36,28 @@ app.get("/search-users", async (req, res) => {
 });
 
 // 🔹 SOCKET
-const onlineUsers = {};
+io.on("connection", (socket) => {
+  console.log("User connected:", socket.id);
 
-io.on("connection", socket => {
-  console.log("User connected");
-
-  socket.on("login", async username => {
-    onlineUsers[username] = socket.id;
-    await User.findOneAndUpdate(
-      { username },
-      { username },
-      { upsert: true }
-    );
+  // USER LOGIN
+  socket.on("login", (username) => {
+    socket.username = username;
+    socket.join(username); // 🔑 room = username
+    console.log(`${username} joined`);
   });
 
-  socket.on("private-message", ({ to, message, from }) => {
-    const target = onlineUsers[to];
-    if (target) {
-      io.to(target).emit("private-message", { from, message });
-    }
+  // SEND MESSAGE
+  socket.on("sendMessage", ({ to, message, from }) => {
+    console.log("Message:", from, "→", to);
+
+    // receiver ke room me bhejo
+    io.to(to).emit("receiveMessage", {
+      from,
+      message
+    });
   });
 
   socket.on("disconnect", () => {
-    for (let user in onlineUsers) {
-      if (onlineUsers[user] === socket.id) {
-        delete onlineUsers[user];
-      }
-    }
+    console.log("User disconnected");
   });
-});
-
-server.listen(3000, () => {
-  console.log("Server running on port 3000");
 });

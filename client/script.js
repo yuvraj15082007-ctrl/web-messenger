@@ -1,64 +1,66 @@
+// 🔗 CONNECT TO SERVER
 const socket = io("https://web-messenger-92gg.onrender.com");
 
-let myUsername = "";
+let currentUser = "";
 
-function login() {
-  myUsername = document.getElementById("username").value.trim();
-  if (!myUsername) return alert("Enter username");
+// ELEMENTS
+const loginBox = document.getElementById("loginBox");
+const chatBox = document.getElementById("chatBox");
+const loginBtn = document.getElementById("loginBtn");
+const sendBtn = document.getElementById("sendBtn");
 
-  socket.emit("login", myUsername);
+const usernameInput = document.getElementById("username");
+const toUserInput = document.getElementById("toUser");
+const messageInput = document.getElementById("message");
+const messagesDiv = document.getElementById("messages");
 
-  document.getElementById("loginBox").style.display = "none";
-  document.getElementById("chatBox").style.display = "block";
-}
+// 🔐 LOGIN
+loginBtn.addEventListener("click", () => {
+  const username = usernameInput.value.trim();
 
-// 🔹 Suggestions
-const toUser = document.getElementById("toUser");
-const suggestions = document.getElementById("suggestions");
+  if (!username) {
+    alert("Username required");
+    return;
+  }
 
-toUser.addEventListener("input", async () => {
-  const q = toUser.value.trim();
-  suggestions.innerHTML = "";
-  if (q.length < 2) return;
+  currentUser = username;
+  socket.emit("login", username);
 
-  const res = await fetch(
-    `https://web-messenger-92gg.onrender.com/search-users?q=${q}`
-  );
-  const users = await res.json();
-
-  users.forEach(u => {
-    const div = document.createElement("div");
-    div.className = "suggestion-item";
-    div.innerText = u;
-    div.onclick = () => {
-      toUser.value = u;
-      suggestions.innerHTML = "";
-    };
-    suggestions.appendChild(div);
-  });
+  loginBox.style.display = "none";
+  chatBox.style.display = "block";
 });
 
-// 🔹 Send message
-function sendMessage() {
-  const msg = document.getElementById("message").value;
-  const to = toUser.value;
+// 📤 SEND MESSAGE
+sendBtn.addEventListener("click", () => {
+  const message = messageInput.value.trim();
+  const toUser = toUserInput.value.trim();
 
-  if (!msg || !to) return;
+  if (!message || !toUser) {
+    alert("Message & receiver required");
+    return;
+  }
 
-  socket.emit("private-message", {
-    from: myUsername,
-    to,
-    message: msg
+  // 👉 SERVER KO BHEJO
+  socket.emit("sendMessage", {
+    from: currentUser,
+    to: toUser,
+    message: message
   });
 
-  document.getElementById("chat").innerHTML +=
-    `<p><b>You:</b> ${msg}</p>`;
-
-  document.getElementById("message").value = "";
-}
-
-// 🔹 Receive message
-socket.on("private-message", data => {
-  document.getElementById("chat").innerHTML +=
-    `<p><b>${data.from}:</b> ${data.message}</p>`;
+  addMessage("You", message);
+  messageInput.value = "";
 });
+
+// 📥 RECEIVE MESSAGE
+socket.on("receiveMessage", (data) => {
+  addMessage(data.from, data.message);
+});
+
+// 🧩 MESSAGE UI FUNCTION
+function addMessage(user, msg) {
+  const div = document.createElement("div");
+  div.className = "msg";
+  div.innerHTML = `<b>${user}:</b> ${msg}`;
+  messagesDiv.appendChild(div);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
