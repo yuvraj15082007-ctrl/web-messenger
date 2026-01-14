@@ -1,80 +1,66 @@
-// 🔗 Backend URL (Render)
-const SOCKET_URL = "https://web-messenger-92gg.onrender.com";
+const socket = io(
+  "https://web-messenger-92gq.onrender.com", 
+  { transports: ["websocket"] }
+);
 
-// ================= LOGIN PAGE =================
-if (document.getElementById("loginBtn")) {
-  const loginBtn = document.getElementById("loginBtn");
+// get username from localStorage
+const username = localStorage.getItem("username");
 
-  loginBtn.addEventListener("click", () => {
-    const username = document
-      .getElementById("usernameInput")
-      .value.trim();
-
-    if (!username) {
-      alert("Username required");
-      return;
-    }
-
-    localStorage.setItem("username", username);
-    window.location.href = "chat.html";
-  });
+if (!username) {
+  window.location.href = "index.html";
 }
 
-// ================= CHAT PAGE =================
-if (document.getElementById("sendBtn")) {
-  const username = localStorage.getItem("username");
+document.getElementById("myUsername").innerText = username;
 
-  if (!username) {
-    // direct access block
-    window.location.href = "index.html";
+// register user
+socket.emit("register", username);
+
+// receive private message
+socket.on("private_message", (data) => {
+  const chatBox = document.getElementById("chatBox");
+
+  const div = document.createElement("div");
+  div.innerText = `${data.from}: ${data.message}`;
+
+  chatBox.appendChild(div);
+  chatBox.scrollTop = chatBox.scrollHeight;
+});
+
+// send message
+function sendMessage() {
+  const to = document.getElementById("toUser").value;
+  const msg = document.getElementById("messageInput").value;
+
+  if (!to || !msg) {
+    alert("Username aur message dono bharo");
+    return;
   }
 
-  const socket = io(SOCKET_URL, {
-    transports: ["websocket"]
+  socket.emit("private_message", {
+    to,
+    message: msg,
   });
 
-  // UI elements
-  document.getElementById("welcomeText").innerText =
-    "Welcome, " + username;
+  const chatBox = document.getElementById("chatBox");
+  const div = document.createElement("div");
+  div.innerText = `You → ${to}: ${msg}`;
+  div.style.color = "blue";
 
-  socket.emit("register-user", username);
+  chatBox.appendChild(div);
+  chatBox.scrollTop = chatBox.scrollHeight;
 
-  const messagesDiv = document.getElementById("messages");
-  const sendBtn = document.getElementById("sendBtn");
+  document.getElementById("messageInput").value = "";
+}
 
-  sendBtn.addEventListener("click", () => {
-    const toUser = document.getElementById("toUser").value.trim();
-    const message = document
-      .getElementById("messageInput")
-      .value.trim();
-
-    if (!toUser || !message) return;
-
-    socket.emit("private-message", {
-      from: username,
-      to: toUser,
-      message
-    });
-
-    addMessage("You", message);
-    document.getElementById("messageInput").value = "";
+// enter key support
+document
+  .getElementById("messageInput")
+  .addEventListener("keydown", (e) => {
+    if (e.key === "Enter") sendMessage();
   });
 
-  socket.on("private-message", ({ from, message }) => {
-    addMessage(from, message);
-  });
-
-  function addMessage(user, msg) {
-    const div = document.createElement("div");
-    div.className = "msg";
-    div.innerHTML = `<b>${user}:</b> ${msg}`;
-    messagesDiv.appendChild(div);
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
-  }
-
-  // LOGOUT
-  document.getElementById("logoutBtn").addEventListener("click", () => {
-    localStorage.removeItem("username");
-    window.location.href = "index.html";
-  });
+// logout
+function logout() {
+  localStorage.removeItem("username");
+  window.location.href = "index.html";
 }
