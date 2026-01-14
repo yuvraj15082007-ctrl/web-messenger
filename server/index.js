@@ -1,12 +1,13 @@
 const express = require("express");
 const http = require("http");
-const cors = require("cors");
 const { Server } = require("socket.io");
+const cors = require("cors");
 
 const app = express();
+app.use(cors());
+
 const server = http.createServer(app);
 
-// ✅ Socket.io with CORS (Netlify allow)
 const io = new Server(server, {
   cors: {
     origin: "*",
@@ -14,58 +15,40 @@ const io = new Server(server, {
   }
 });
 
-app.use(cors());
-app.use(express.json());
-
-// Test route
-app.get("/", (req, res) => {
-  res.send("Web Messenger Server Running");
-});
-
-// 🔑 username -> socket.id map
-const users = {};
+const users = {}; // username -> socket.id
 
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
-  // 🔐 Register username
-  socket.on("register-user", (username) => {
-    if (!username) return;
-
+  socket.on("join", (username) => {
     users[username] = socket.id;
-    console.log("User registered:", username);
+    socket.username = username;
+    console.log(`${username} joined`);
   });
 
-  // 💬 Private message
-  socket.on("private-message", ({ from, to, message }) => {
-    console.log(`Message ${from} -> ${to}: ${message}`);
-
-    const receiverSocketId = users[to];
-
-    if (receiverSocketId) {
-      io.to(receiverSocketId).emit("private-message", {
-        from,
+  socket.on("private_message", ({ to, message }) => {
+    const targetSocket = users[to];
+    if (targetSocket) {
+      io.to(targetSocket).emit("private_message", {
+        from: socket.username,
         message
       });
     }
   });
 
-  // ❌ Disconnect cleanup
   socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
-
-    for (let username in users) {
-      if (users[username] === socket.id) {
-        delete users[username];
-        break;
-      }
+    if (socket.username) {
+      delete users[socket.username];
+      console.log(`${socket.username} disconnected`);
     }
   });
 });
 
-// ✅ Render required PORT
-const PORT = process.env.PORT || 10000;
+app.get("/", (req, res) => {
+  res.send("Web Messenger Backend Running 🚀");
+});
+
+const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log("Server running on port", PORT);
 });
-
