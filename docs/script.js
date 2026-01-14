@@ -3,12 +3,16 @@ const socket = io("https://web-messenger-production.up.railway.app");
 const messageInput = document.getElementById("messageInput");
 const messagesDiv = document.getElementById("messages");
 
+socket.on("connect", () => {
+  console.log("✅ Connected to server:", socket.id);
+});
+
 function sendMessage() {
-  const message = messageInput.value.trim();
-  if (!message) return;
+  const msg = messageInput.value.trim();
+  if (!msg) return;
 
   socket.emit("send_message", {
-    text: message
+    text: msg
   });
 
   messageInput.value = "";
