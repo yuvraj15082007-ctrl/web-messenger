@@ -1,5 +1,5 @@
 const socket = io(
-  "https://web-messenger-92gq.onrender.com", 
+  "https://web-messenger-production.up.railway.app", 
   { transports: ["websocket"] }
 );
 
