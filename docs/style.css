@@ -1,38 +1,52 @@
 body {
-  font-family: Arial;
-  padding: 20px;
+  font-family: Arial, sans-serif;
+  background: #f2f2f2;
 }
 
-input, textarea {
-  width: 200px;
-  padding: 5px;
-  margin: 5px 0;
-}
-
-textarea {
-  height: 60px;
-}
-
-#chat {
-  border: 1px solid #ccc;
-  margin-top: 10px;
-  padding: 5px;
-  height: 200px;
-  overflow-y: auto;
-}
-
-.suggestions {
-  border: 1px solid #ccc;
-  width: 200px;
+.login-box,
+.chat-box {
+  width: 320px;
+  margin: 100px auto;
   background: #fff;
-  position: absolute;
+  padding: 20px;
+  border-radius: 8px;
 }
 
-.suggestion-item {
-  padding: 5px;
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
   cursor: pointer;
 }
 
-.suggestion-item:hover {
-  background: #eee;
+.messages {
+  height: 250px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  margin-top: 10px;
+  padding: 5px;
+}
+
+.msg {
+  margin-bottom: 5px;
+}
+
+.send-box {
+  display: flex;
+  gap: 5px;
+}
+
+.send-box input {
+  flex: 1;
+}
+
+.logout {
+  background: #ff4d4d;
+  color: white;
 }

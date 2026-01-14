@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Chat | Web Messenger</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="chat-box">
+    <h2 id="welcomeText"></h2>
+
+    <input id="toUser" placeholder="Send to username" />
+
+    <div id="messages" class="messages"></div>
+
+    <div class="send-box">
+      <input id="messageInput" placeholder="Type message..." />
+      <button id="sendBtn">Send</button>
+    </div>
+
+    <button id="logoutBtn" class="logout">Logout</button>
+  </div>
+
+  <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
