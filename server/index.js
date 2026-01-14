@@ -1,11 +1,8 @@
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
-const cors = require("cors");
 
 const app = express();
-app.use(cors());
-
 const server = http.createServer(app);
 
 const io = new Server(server, {
@@ -15,40 +12,26 @@ const io = new Server(server, {
   }
 });
 
-const users = {}; // username -> socket.id
+app.get("/", (req, res) => {
+  res.send("Web messenger backend running");
+});
 
 io.on("connection", (socket) => {
-  console.log("User connected:", socket.id);
+  console.log("✅ User connected:", socket.id);
 
-  socket.on("join", (username) => {
-    users[username] = socket.id;
-    socket.username = username;
-    console.log(`${username} joined`);
-  });
-
-  socket.on("private_message", ({ to, message }) => {
-    const targetSocket = users[to];
-    if (targetSocket) {
-      io.to(targetSocket).emit("private_message", {
-        from: socket.username,
-        message
-      });
-    }
+  socket.on("send_message", (data) => {
+    console.log("📩 Message:", data);
+    io.emit("receive_message", data);
   });
 
   socket.on("disconnect", () => {
-    if (socket.username) {
-      delete users[socket.username];
-      console.log(`${socket.username} disconnected`);
-    }
+    console.log("❌ User disconnected:", socket.id);
   });
 });
 
-app.get("/", (req, res) => {
-  res.send("Web Messenger Backend Running 🚀");
-});
+const PORT = process.env.PORT || 8080;
 
-const PORT = process.env.PORT || 3000;
+// ❗ IMPORTANT — server.listen must be LAST LINE
 server.listen(PORT, () => {
-  console.log("Server running on port", PORT);
+  console.log("🚀 Server running on port", PORT);
 });
