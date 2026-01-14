@@ -2,26 +2,46 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Chat | Web Messenger</title>
+  <title>Web Messenger - Chat</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <div class="chat-box">
-    <h2 id="welcomeText"></h2>
+  <h2>Web Messenger</h2>
 
-    <input id="toUser" placeholder="Send to username" />
+  <!-- Logged in user -->
+  <p><b>Logged in as:</b> <span id="myUsername"></span></p>
 
-    <div id="messages" class="messages"></div>
+  <!-- Send to -->
+  <input
+    type="text"
+    id="toUser"
+    placeholder="Send to username"
+  />
 
-    <div class="send-box">
-      <input id="messageInput" placeholder="Type message..." />
-      <button id="sendBtn">Send</button>
-    </div>
+  <!-- Chat box -->
+  <div
+    id="chatBox"
+    style="height:300px; border:1px solid #ccc; margin:10px 0; padding:10px; overflow-y:auto;"
+  ></div>
 
-    <button id="logoutBtn" class="logout">Logout</button>
-  </div>
+  <!-- Message input -->
+  <input
+    type="text"
+    id="messageInput"
+    placeholder="Type message"
+    style="width:80%; padding:8px;"
+  />
 
+  <button onclick="sendMessage()">Send</button>
+
+  <br><br>
+
+  <button onclick="logout()" style="background:red;color:white;padding:8px;">
+    Logout
+  </button>
+
+  <!-- Socket.io -->
   <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
   <script src="script.js"></script>
 </body>
