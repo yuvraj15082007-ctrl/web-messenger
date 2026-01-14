@@ -7,29 +7,23 @@
 </head>
 <body>
 
-  <!-- LOGIN BOX -->
-  <div id="loginBox" class="center">
-    <h2>Login</h2>
-    <input id="username" placeholder="Enter username" />
-    <button id="loginBtn">Login</button>
-  </div>
+  <h2>Web Messenger</h2>
 
-  <!-- CHAT BOX -->
-  <div id="chatBox" class="center" style="display:none;">
-    <h2>Web Messenger</h2>
+  <input id="username" placeholder="Your username" />
+  <button id="loginBtn">Login</button>
 
-    <input id="toUser" placeholder="Send to username" />
+  <br><br>
 
-    <div id="messages" class="chat"></div>
+  <input id="toUser" placeholder="Send to username" />
+  <br><br>
 
-    <div class="sendBox">
-      <input id="message" placeholder="Type message..." />
-      <button id="sendBtn">Send</button>
-    </div>
-  </div>
+  <input id="message" placeholder="Type message" />
+  <button id="sendBtn">Send</button>
 
-  <!-- SOCKET.IO -->
-  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <ul id="chat"></ul>
+
+  <!-- socket.io -->
+  <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

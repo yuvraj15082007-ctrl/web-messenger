@@ -1,66 +1,48 @@
-// 🔗 CONNECT TO SERVER
+// ✅ Render backend URL
 const socket = io("https://web-messenger-92gg.onrender.com");
 
 let currentUser = "";
 
-// ELEMENTS
-const loginBox = document.getElementById("loginBox");
-const chatBox = document.getElementById("chatBox");
-const loginBtn = document.getElementById("loginBtn");
-const sendBtn = document.getElementById("sendBtn");
-
-const usernameInput = document.getElementById("username");
-const toUserInput = document.getElementById("toUser");
-const messageInput = document.getElementById("message");
-const messagesDiv = document.getElementById("messages");
-
-// 🔐 LOGIN
-loginBtn.addEventListener("click", () => {
-  const username = usernameInput.value.trim();
+// LOGIN
+document.getElementById("loginBtn").addEventListener("click", () => {
+  const username = document.getElementById("username").value.trim();
 
   if (!username) {
-    alert("Username required");
+    alert("Enter username");
     return;
   }
 
   currentUser = username;
-  socket.emit("login", username);
+  socket.emit("register-user", username);
 
-  loginBox.style.display = "none";
-  chatBox.style.display = "block";
+  alert("Logged in as " + username);
 });
 
-// 📤 SEND MESSAGE
-sendBtn.addEventListener("click", () => {
-  const message = messageInput.value.trim();
-  const toUser = toUserInput.value.trim();
+// SEND MESSAGE
+document.getElementById("sendBtn").addEventListener("click", () => {
+  const to = document.getElementById("toUser").value.trim();
+  const message = document.getElementById("message").value.trim();
 
-  if (!message || !toUser) {
-    alert("Message & receiver required");
-    return;
-  }
+  if (!to || !message) return;
 
-  // 👉 SERVER KO BHEJO
-  socket.emit("sendMessage", {
+  socket.emit("private-message", {
     from: currentUser,
-    to: toUser,
-    message: message
+    to,
+    message
   });
 
-  addMessage("You", message);
-  messageInput.value = "";
+  addMessage(`You → ${to}: ${message}`);
+  document.getElementById("message").value = "";
 });
 
-// 📥 RECEIVE MESSAGE
-socket.on("receiveMessage", (data) => {
-  addMessage(data.from, data.message);
+// RECEIVE MESSAGE
+socket.on("private-message", ({ from, message }) => {
+  addMessage(`${from}: ${message}`);
 });
 
-// 🧩 MESSAGE UI FUNCTION
-function addMessage(user, msg) {
-  const div = document.createElement("div");
-  div.className = "msg";
-  div.innerHTML = `<b>${user}:</b> ${msg}`;
-  messagesDiv.appendChild(div);
-  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+// UI helper
+function addMessage(text) {
+  const li = document.createElement("li");
+  li.textContent = text;
+  document.getElementById("chat").appendChild(li);
 }
