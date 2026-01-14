@@ -2,17 +2,48 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Login | Web Messenger</title>
+  <title>Web Messenger - Login</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
+  <h1>Web Messenger</h1>
+
   <div class="login-box">
-    <h2>Login</h2>
-    <input id="usernameInput" placeholder="Enter username" />
+    <input
+      type="text"
+      id="username"
+      placeholder="Enter username"
+      autocomplete="off"
+    />
     <button id="loginBtn">Login</button>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    // LOGIN BUTTON LOGIC
+    document.getElementById("loginBtn").addEventListener("click", () => {
+      const usernameInput = document.getElementById("username");
+      const username = usernameInput.value.trim();
+
+      if (username === "") {
+        alert("Username required");
+        return;
+      }
+
+      // Save username
+      localStorage.setItem("username", username);
+
+      // Redirect to chat page
+      window.location.href = "chat.html";
+    });
+
+    // ENTER KEY SUPPORT
+    document.getElementById("username").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        document.getElementById("loginBtn").click();
+      }
+    });
+  </script>
+
 </body>
 </html>
