@@ -5,6 +5,7 @@ const { Server } = require("socket.io");
 const app = express();
 const server = http.createServer(app);
 
+// ✅ VERY IMPORTANT: CORS
 const io = new Server(server, {
   cors: {
     origin: "*",
@@ -12,26 +13,28 @@ const io = new Server(server, {
   }
 });
 
+// ✅ HEALTH CHECK (MOST IMPORTANT)
 app.get("/", (req, res) => {
-  res.send("Web messenger backend running");
+  res.status(200).send("Web Messenger Backend Running ✅");
 });
 
+// ✅ SOCKET
 io.on("connection", (socket) => {
-  console.log("✅ User connected:", socket.id);
+  console.log("✅ user connected:", socket.id);
 
   socket.on("send_message", (data) => {
-    console.log("📩 Message:", data);
+    console.log("📩 message:", data);
     io.emit("receive_message", data);
   });
 
   socket.on("disconnect", () => {
-    console.log("❌ User disconnected:", socket.id);
+    console.log("❌ user disconnected:", socket.id);
   });
 });
 
+// ✅ PORT + HOST (CRITICAL)
 const PORT = process.env.PORT || 8080;
 
-// ❗ IMPORTANT — server.listen must be LAST LINE
-server.listen(PORT, () => {
+server.listen(PORT, "0.0.0.0", () => {
   console.log("🚀 Server running on port", PORT);
 });
