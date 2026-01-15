@@ -1,28 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Chat</title>
+  <meta charset="UTF-8">
+  <title>Web Messenger</title>
 </head>
 <body>
 
-<input id="toUser" placeholder="Send to user" />
+  <!-- Send to -->
+  <input id="toUser" placeholder="Send to username" />
+  <br><br>
 
-<div id="messages"
-     style="border:1px solid #ccc;height:300px;overflow:auto"></div>
+  <!-- Messages box -->
+  <div id="messages"
+       style="border:1px solid #000; height:300px; width:90%; overflow:auto;">
+  </div>
 
-<input id="messageInput" placeholder="Type message" />
+  <br>
 
-<button onclick="sendMessage()">Send</button>
+  <!-- Message input -->
+  <input id="messageInput" placeholder="Type message" style="width:70%;" />
+  <button onclick="sendMessage()">Send</button>
 
-<br><br>
+  <br><br>
 
-<button onclick="logout()" style="background:red;color:white;">
-  Logout
-</button>
+  <button onclick="logout()" style="background:red;color:white;padding:8px;">
+    Logout
+  </button>
 
-<!-- socket FIRST -->
-<script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+  <!-- ✅ socket.io FIRST -->
+  <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
 
+  <!-- ✅ your script SECOND -->
+  <script src="./scripts/script.js"></script>
+</body>
+</html>
 <!-- script SECOND -->
 <script src="scripts/script.js"></script>
 
