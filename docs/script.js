@@ -1,4 +1,6 @@
-const socket = io("https://web-messenger-production.up.railway.app");
+const socket = io("https://web-messenger-production.up.railway.app", {
+  transports: ["websocket"]
+});
 
 const messageInput = document.getElementById("messageInput");
 const messagesDiv = document.getElementById("messages");
