@@ -13,7 +13,11 @@ const io = new Server(server, {
 });
 
 app.get("/", (req, res) => {
-  res.status(200).send("Web messenger backend running");
+  res.send("Web messenger backend running");
+});
+
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
 });
 
 io.on("connection", (socket) => {
