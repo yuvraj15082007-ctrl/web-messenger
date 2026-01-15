@@ -1,33 +1,25 @@
-// 🔥 DO NOT FORCE websocket only
 const socket = io(
   "https://web-messenger-production.up.railway.app",
   {
-    path: "/socket.io",
-    transports: ["polling", "websocket"]
+    transports: ["polling", "websocket"],
+    reconnection: true,
+    reconnectionAttempts: 5,
+    timeout: 20000
   }
 );
 
-const messageInput = document.getElementById("messageInput");
-const messagesDiv = document.getElementById("messages");
-
 socket.on("connect", () => {
-  console.log("✅ connected to server:", socket.id);
+  console.log("✅ connected", socket.id);
 });
 
-socket.on("receive_message", (data) => {
+socket.on("receive_message", (msg) => {
   const div = document.createElement("div");
-  div.innerText = data;
-  messagesDiv.appendChild(div);
+  div.innerText = msg;
+  document.getElementById("messages").appendChild(div);
 });
 
 function sendMessage() {
-  const msg = messageInput.value;
-  if (!msg) return;
-
-  socket.emit("send_message", msg);
-  messageInput.value = "";
-}
-
-function logout() {
-  window.location.href = "index.html";
+  const input = document.getElementById("messageInput");
+  socket.emit("send_message", input.value);
+  input.value = "";
 }
