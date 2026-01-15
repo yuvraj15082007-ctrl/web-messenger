@@ -6,11 +6,14 @@ const app = express();
 const server = http.createServer(app);
 
 const io = new Server(server, {
-  cors: { origin: "*" },
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
 });
 
 app.get("/", (req, res) => {
-  res.send("Web messenger backend running");
+  res.status(200).send("Web messenger backend running");
 });
 
 io.on("connection", (socket) => {
@@ -27,6 +30,10 @@ io.on("connection", (socket) => {
 
 const PORT = process.env.PORT || 8080;
 
+/**
+ * 🔥 THIS IS THE MOST IMPORTANT LINE 🔥
+ * Railway needs 0.0.0.0
+ */
 server.listen(PORT, "0.0.0.0", () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log("🚀 Server running on port", PORT);
 });
